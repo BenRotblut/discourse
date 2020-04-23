@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Discourse - Ember CLI</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{content-for "head"}}
+  </head>
+  <body>
+    {{content-for "body"}}
+
+    <section id='main'>
+    </section>
+
+    <script src="{{rootURL}}assets/vendor.js"></script>
+    <script src="{{rootURL}}assets/discourse.js"></script>
+
+    <script>
+      // TODO: Remove this and have resolver find the templates
+      (function() {
+        var prefix = "discourse/templates/";
+        var len = prefix.length;
+        Object.keys(requirejs.entries).forEach(function(key) {
+          if (key.indexOf(prefix) === 0) {
+            Ember.TEMPLATES[key.substr(len)] = require(key).default;
+          }
+        });
+      })();
+
+      // TODO: Eliminate this global
+      window.virtualDom = require('virtual-dom');
+    </script>
+
+    {{content-for "body-footer"}}
+    {{content-for "discourse-boot"}}
+  </body>
+</html>

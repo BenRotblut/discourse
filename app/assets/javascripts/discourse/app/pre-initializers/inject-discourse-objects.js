@@ -31,6 +31,7 @@ export default {
       ALL_TARGETS.forEach((t) => app.inject(t, "store", "service:store"));
     }
 
+    // TODO: This should be included properly
     app.register("message-bus:main", MessageBus, { instantiate: false });
 
     ALL_TARGETS.concat("service").forEach((t) =>

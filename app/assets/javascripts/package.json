@@ -1,0 +1,12 @@
+
+{
+  "private": true,
+  "workspaces": [
+    "discourse",
+    "discourse-common",
+    "discourse-hbr",
+    "discourse-widget-hbs",
+    "pretty-text",
+    "select-kit"
+  ]
+}

@@ -10,8 +10,7 @@ export default {
     app.register("router:main", mapRoutes());
 
     // HACK to fix: https://github.com/emberjs/ember.js/issues/10310
-    const originalBuildInstance =
-      originalBuildInstance || Application.prototype.buildInstance;
+    const originalBuildInstance = Application.prototype.buildInstance;
 
     Application.prototype.buildInstance = function () {
       this.buildRegistry();

@@ -13,6 +13,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setURLContainer } from "discourse/lib/url";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
+import { camelize } from "@ember/string";
 
 export default {
   name: "discourse-bootstrap",
@@ -26,22 +27,37 @@ export default {
     if (isTesting()) {
       return;
     }
-    const preloadedDataElement = document.getElementById("data-preloaded");
-    const setupData = document.getElementById("data-discourse-setup").dataset;
 
-    if (preloadedDataElement) {
-      const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-
-      Object.keys(preloaded).forEach(function (key) {
-        PreloadStore.store(key, JSON.parse(preloaded[key]));
-
-        if (setupData.debugPreloadedAppData === "true") {
-          /* eslint-disable no-console */
-          console.log(key, PreloadStore.get(key));
-          /* eslint-enable no-console */
-        }
+    let setupData;
+    let preloaded;
+    if (app.bootstrap) {
+      // This is annoying but our old way of using `data-*` attributes used camelCase by default
+      setupData = {};
+      Object.keys(app.bootstrap.setup_data).forEach((k) => {
+        setupData[camelize(k)] = app.bootstrap.setup_data[k];
       });
+      preloaded = app.bootstrap.preloaded;
     }
+
+    const setupDataElement = document.getElementById("data-discourse-setup");
+    if (setupDataElement) {
+      setupData = document.getElementById("data-discourse-setup").dataset;
+    }
+
+    const preloadedDataElement = document.getElementById("data-preloaded");
+    if (preloadedDataElement) {
+      preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+    }
+
+    Object.keys(preloaded).forEach(function (key) {
+      PreloadStore.store(key, JSON.parse(preloaded[key]));
+
+      if (setupData.debugPreloadedAppData === "true") {
+        /* eslint-disable no-console */
+        console.log(key, PreloadStore.get(key));
+        /* eslint-enable no-console */
+      }
+    });
 
     let baseUrl = setupData.baseUrl;
     Object.defineProperty(app, "BaseUrl", {

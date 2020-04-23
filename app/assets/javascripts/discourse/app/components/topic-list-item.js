@@ -7,6 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -50,7 +51,10 @@ export default Component.extend({
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
     if (template) {
-      this.set("topicListItemContents", template(this).htmlSafe());
+      this.set(
+        "topicListItemContents",
+        template(this, RUNTIME_OPTIONS).htmlSafe()
+      );
     }
   },
 
